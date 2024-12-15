@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dupuis.lol</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#121212',
+                        'dark-secondary': '#1e1e1e',
+                        'light-bg': '#f4f4f4',
+                        'light-secondary': '#ffffff',
+                        'dark-text': '#e0e0e0',
+                        'light-text': '#333333',
+                        'brand-blue': '#4285f4',
+                        'brand-green': '#34A853',
+                        'brand-red': '#EA4335'
+                    },
+                    boxShadow: {
+                        'ai-glow': '0 0 20px rgba(66, 133, 244, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Styles -->
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4285f4;
+            border-radius: 4px;
+        }
+        .ai-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body class="bg-light-bg text-light-text dark:bg-dark-bg dark:text-dark-text transition-colors duration-300">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-12">
+            <h1 class="text-4xl font-bold text-brand-blue flex items-center">
+                <i class="fas fa-search-plus mr-3"></i>Dupuis Search
+            </h1>
+            
+            <!-- Toolbar -->
+            <div class="flex items-center space-x-4">
+                <button id="voiceSearchBtn" class="text-brand-blue hover:text-opacity-80 transition-colors" title="Voice Search">
+                    <i class="fas fa-microphone text-xl"></i>
+                </button>
+                <button id="settingsBtn" class="text-brand-blue hover:text-opacity-80 transition-colors" title="Settings">
+                    <i class="fas fa-cog text-xl"></i>
+                </button>
+                <button id="themeToggle" class="text-brand-blue hover:text-opacity-80 transition-colors" title="Toggle Theme">
+                    <i class="fas fa-sun text-xl"></i>
+                </button>
+            </div>
+        </header>
+        
+        <main>
+            <!-- Search Container -->
+            <div class="flex justify-center mb-8">
+                <div class="relative w-full max-w-2xl">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search or ask anything intelligent..." 
+                        class="w-full px-6 py-4 pr-20 rounded-full 
+                               bg-light-secondary dark:bg-dark-secondary 
+                               text-light-text dark:text-dark-text 
+                               border-2 border-gray-300 dark:border-gray-700 
+                               focus:border-brand-blue focus:outline-none 
+                               focus:ring-2 focus:ring-brand-blue/50
+                               transition-all duration-300 text-lg"
+                    >
+                    <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center space-x-2">
+                        <button 
+                            id="clearSearchBtn"
+                            class="text-gray-500 hover:text-brand-red transition-colors"
+                            title="Clear Search"
+                        >
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button 
+                            id="searchButton" 
+                            class="bg-brand-blue text-white p-3 rounded-full 
+                                   hover:bg-blue-600 transition-colors"
+                            title="Search"
+                        >
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advanced Search Options -->
+            <div id="advancedSearchOptions" class="mb-6 text-center hidden">
+                <div class="flex justify-center space-x-4">
+                    <select id="searchLanguage" class="px-4 py-2 rounded bg-light-secondary dark:bg-dark-secondary">
+                        <option value="">Any Language</option>
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <!-- Add more languages -->
+                    </select>
+                    <select id="searchTimeframe" class="px-4 py-2 rounded bg-light-secondary dark:bg-dark-secondary">
+                        <option value="">Any Time</option>
+                        <option value="24h">Last 24 Hours</option>
+                        <option value="week">Last Week</option>
+                        <option value="month">Last Month</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Results Container -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Search History -->
+                <div class="hidden md:block bg-light-secondary dark:bg-dark-secondary rounded-lg p-4 max-h-96 overflow-y-auto">
+                    <h3 class="text-lg font-semibold mb-4 text-brand-blue">Recent Searches</h3>
+                    <ul id="searchHistory" class="space-y-2"></ul>
+                </div>
+                
+                <!-- Results Area -->
+                <div class="md:col-span-2 space-y-6">
+                    <div 
+                        id="searchResults" 
+                        class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    ></div>
+                    
+                    <!-- AI Response Section -->
+                    <div 
+                        id="aiResponse" 
+                        class="bg-light-secondary dark:bg-dark-secondary p-6 rounded-lg shadow-lg relative"
+                    >
+                        <div id="aiResponseContent" class="space-y-4">
+                            <!-- AI insights will be dynamically populated -->
+                        </div>
+                        <div id="aiResponseActions" class="mt-4 flex justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button id="copyAIResponseBtn" class="text-brand-blue hover:text-blue-700">
+                                <i class="fas fa-copy mr-2"></i>Copy
+                            </button>
+                            <button id="shareAIResponseBtn" class="text-brand-green hover:text-green-700">
+                                <i class="fas fa-share-alt mr-2"></i>Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+        <div class="bg-light-secondary dark:bg-dark-secondary rounded-lg p-8 max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-6 text-brand-blue">Settings</h2>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <label class="text-lg">Dark Mode</label>
+                    <input type="checkbox" id="darkModeToggle" class="form-checkbox">
+                </div>
+                <div class="flex justify-between items-center">
+                    <label class="text-lg">Safe Search</label>
+                    <input type="checkbox" id="safeSearchToggle" class="form-checkbox">
+                </div>
+                <div class="flex justify-between items-center">
+                    <label class="text-lg">AI Response Length</label>
+                    <select id="aiResponseLengthSelect" class="px-2 py-1 rounded">
+                        <option value="short">Short</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="long">Long</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+                <button id="cancelSettingsBtn" class="text-gray-500 hover:text-gray-700">Cancel</button>
+                <button id="saveSettingsBtn" class="bg-brand-blue text-white px-4 py-2 rounded">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
